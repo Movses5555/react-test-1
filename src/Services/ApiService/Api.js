@@ -15,16 +15,45 @@ class Api {
             }
         );
     }
-
-    baseUrl = 'http://127.0.0.1:8000';
-    companiesURL = `${this.baseUrl}/api/companies`;
-    employeesURL = `${this.baseUrl}/api/employees`;
-    imgURL = "http://127.0.0.1:8000/storage/";
-
-    getToken(){
-        return localStorage["token"] && JSON.parse(localStorage["token"]).access_token;
+    headers = {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*',
     }
 
+    baseUrl = 'http://laravel.loc';
+    companiesURL = `${this.baseUrl}/api/companies`;
+    employeesURL = `${this.baseUrl}/api/employees`;
+    imgURL = "http://laravel.loc/storage/";
+
+    getToken(){
+        return localStorage.getItem('token');
+    }
+    getImage(image) {
+        return this.imgURL + image;
+    }
+    signIn(data) {
+        return axios.post(`${this.baseUrl}/api/auth/login`, data, {
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            }
+        });
+    }
+    fileUpload(data) {
+        var formData = new FormData();
+        formData.set('logo', data);
+        
+        return axios.post(`${this.baseUrl}/upload`, formData, {
+            headers: {
+                'Authorization': `bearer ${this.getToken()}`,
+                'Content-Type': "multipart/form-data",
+            }
+        })
+    }
+
+    
     ///                       Companies 
 
     getAllCompanies(page = 1) {
@@ -34,8 +63,6 @@ class Api {
             }
         });
     }  
-
-
     getCompany(id) {
         return this.Auth.get(`${this.companiesURL}/${id}` , {
             headers: {
@@ -47,15 +74,17 @@ class Api {
         return this.Auth.post(this.companiesURL, data, {
             headers: {
                 'Authorization': `bearer  ${this.getToken()}`,
-                "Content-Type": "multipart/form-data",
+                //"Content-Type": "multipart/form-data",
             }
         });
     }
     updateCompany(id, data) {
-        return this.Auth.post(`${this.companiesURL}/${id}`, data, {
+        return this.Auth.put(`${this.companiesURL}/${id}`, data, {
             headers: {
                 'Authorization': `bearer  ${this.getToken()}`,
-                "Content-Type": "multipart/form-data"
+                // "Content-Type": "application/x-www-form-urlencoded",
+                //"Content-Type": "multipart/form-data",
+                'Accept': 'application/json'
             }
         });
     }
@@ -68,16 +97,45 @@ class Api {
     }
 
 
+    /////               Employyes
 
-
-    getImage(image) {
-        return this.imgURL + image;
+    getAllEmployees(page = 1) {
+        return this.Auth.get(`${this.employeesURL}?page=${page}` , {
+            headers: {
+                'Authorization': `bearer  ${this.getToken()}`
+            }
+        });
     }
-
-    signIn(data) {
-        return axios.post(`${this.baseUrl}user/login`, data);
+    getEmployee(id) {
+        return this.Auth.get(`${this.employeesURL}/${id}` , {
+            headers: {
+                'Authorization': `bearer  ${this.getToken()}`
+            },
+        });
     }
-    
+    setEmployee(data) {
+        return this.Auth.post(`${this.employeesURL}`, data , {
+            headers: {
+                'Authorization': `bearer  ${this.getToken()}`
+            }
+        });
+    }
+    updateEmployee(id, data) {
+        return this.Auth.put(`${this.employeesURL}/${id}`, data , {
+            headers: {
+                'Authorization': `bearer  ${this.getToken()}`,
+                //"Content-Type": "multipart/form-data",
+                'Accept': 'application/json'
+            }
+        });
+    }
+    destroyEmployee(id) {
+        return this.Auth.delete(`${this.employeesURL}/${id}` , {
+            headers: {
+                'Authorization': `bearer  ${this.getToken()}`
+            }
+        });
+    };
 }
 export default Api;
 

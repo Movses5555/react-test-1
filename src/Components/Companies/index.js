@@ -1,56 +1,62 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import Apis from '../../Services/ApiService/Api.js';
+import NavBar from '../NavBar';
 
 
 
 class CompanyIndex extends Component {
+
     Api = new Apis();
+
     constructor(){
-        super()
+        super();
         this.state = {
             companies: [],
-        }
+            errorMessage: '',
+            imgUrl : "",
+        };
+        this.handleDelete = this.handleDelete.bind(this)
     }
     
     componentDidMount() 
-    {
-
-        this.Api.getAllCompanies().then(res => {
-            this.setState({companies : res.data.data});
-            console.log(this.state.companies);
-        })      
-
+    {   
+        this.setState({imgUrl : this.Api.imgURL});
+        
+        this.Api.getAllCompanies()
+            .then(res => {
+                this.setState({companies : res.data.data});
+            }).catch(err => {
+                this.setState({errorMessage: err})
+            })      
     }
-
-
+    handleDelete(id)
+    {   
+        const data = this.state.companies;
+        this.Api.destroyCompany(id)
+            .then(res => {
+                const newData = data.filter(item => id !== item.id);
+                this.setState({companies : newData})
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
 
     render() {
         return (
             <Fragment>
-                <nav className="navbar navbar-expand-lg navbar-light bg-light">
-                    <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
-                       
-                        <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-                            <li className="nav-item">
-                                <Link to="/companies" className='nav-link'>Companies</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to="/employees" className='nav-link'>Employees</Link>
-                            </li>
-                            <li className="nav-item">
-                                <Link to="/logout" className='nav-link'>Logout</Link>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+                <NavBar></NavBar>
                 <div className="m-4 text-right">
                     <Link to="/companies/create" className="btn btn-sm bg-primary">
                         Add
                     </Link> 
                 </div>
-                <div>              
-                    <table className="mt-5 col-12 table " >
+                <div>
+                    <p>{this.state.errorMessage}</p>
+                </div>
+                <div className="mt-5">              
+                    <table className="col-12 table " >
                         <thead>
                             <tr className="row text-center m-0">
                                 <th className="col-2">Logo</th>
@@ -66,7 +72,7 @@ class CompanyIndex extends Component {
                                 return (
                                     <tr className="row text-center m-0" key={company.id}>
                                         <td className="col-2 pt-2">
-                                            <img src={company.logo} alt='gh' style={{ width: '50px', height: '50px' }} />
+                                            <img src={this.state.imgUrl + company.logo} alt={company.logo} style={{ width: '50px', height: '50px' }} />
                                         </td>
                                         <td className="col-2 pt-2">{company.name}</td>
                                         <td className="col-3 pt-2">{company.email}</td>
@@ -74,28 +80,25 @@ class CompanyIndex extends Component {
                                         <td className="col-2">
                                             <div className="row">
                                                 <div className="float-left mr-2 col-3" >
-                                                    <form method="GET" action="{{route('companies.edit', $item->id)}}">
-                                                 
+                                                    <Link to={`/companies/${company.id}/edit`}>
                                                         <button type="submit" className="btn btn-sm  bg-primary">
-                                                            <i style={{fontSize:'18px'}} className='far'>&#xf044;</i>
+                                                            <i style={{fontSize:'18px', color: 'black'}} className='far'>&#xf044;</i>
                                                         </button>
-                                                    </form>
+                                                    </Link>
+                                                    
+                                                    
                                                 </div>
                                                 <div className="float-left mr-2 col-3" >
-                                                    <form method="GET" action="{{route('companies.show', $item->id)}}">
-                                                      
+                                                    <Link to={`/companies/${company.id}`}>  
                                                         <button type="submit" className="btn btn-sm  bg-primary">
                                                             <i style={{fontSize:'18px'}} className="fa">&#xf06e;</i>
                                                         </button>
-                                                    </form>
+                                                    </Link>
                                                 </div>
                                                 <div className="float-left mr-2 col-3" >
-                                                    <form method="POST" action="{{route('companies.destroy', $item->id)}}">
-                                                        
-                                                        <button type="submit" className="btn btn-sm bg-danger">
+                                                <button className="btn btn-sm bg-danger" onClick={() => this.handleDelete(company.id)}>
                                                             <i style={{fontSize:'18px'}} className="fa">&#xf1f8;</i>
                                                         </button>
-                                                    </form>
 
                                                 </div>
                                             </div>

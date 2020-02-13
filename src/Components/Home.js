@@ -1,20 +1,22 @@
-import React, { Component, Fragment } from 'react';
+import React, { Component } from 'react';
 
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import Login from './Login'
+// import Login from './Login'
 
 class Home extends Component {
     render() {
         return (
             
                 <div>
-                    <nav>
-                        <ul style={{listStyleType: 'none'}}>
-                            <li>
-                                <Link to="/login">Login</Link>
-                            </li>
-                        </ul>
+                    <nav className="navbar navbar-expand navbar-light bg-light">
+                        <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
+                            <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
+                                <li className="nav-item">
+                                    <Link to="/login">Login</Link>
+                                </li>
+                            </ul>
+                        </div>
                     </nav>
 
                     <div>
