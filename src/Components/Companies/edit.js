@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import Apis from '../../Services/ApiService/Api.js';
 import NavBar from '../NavBar';
 
-
-
 class CompanyEdit extends Component {
     Api = new Apis();
     constructor(){
@@ -18,7 +16,6 @@ class CompanyEdit extends Component {
                 logo: ''
             },
             param: 1,
-            companies: [],
             imgUrl: '',
             inProgress: true,
         }
@@ -29,19 +26,14 @@ class CompanyEdit extends Component {
 
     componentDidMount(){
         const id = Number(this.props.match.params.id);
-        this.setState({param : id})
-
-        this.setState({imgUrl : this.Api.imgURL});
-
+        this.setState({
+            param : id,
+            imgUrl : this.Api.imgURL,
+        })
         this.Api.getCompany(id)
             .then(res => {
                 const data = res.data;
-                this.setState((state)=>{
-                    return {
-                        company: data,
-                        inProgress: false,
-                    }
-                })
+                this.setState({company: data})
             })
             .catch(err => {
                 console.log('Error : ', err)
@@ -54,9 +46,7 @@ class CompanyEdit extends Component {
             .then(res=>{
                 const data = this.state.company;
                 data.logo = res.data.logo;
-                this.setState({
-                    company : data
-                })
+                this.setState({company : data})
             })
             .catch((err) => {
                 console.log('EEEEEE ----',err);
@@ -93,7 +83,6 @@ class CompanyEdit extends Component {
             !this.state.inProgress && (
             <Fragment>
                 <NavBar></NavBar>
-                
                 <div className="m-4 text-right">
                     <Link to="/companies" className="btn btn-success mb-1">
                        Back
@@ -148,10 +137,10 @@ class CompanyEdit extends Component {
                                 />
                                     <img style={{'width' : '50px', 'height': 'auto'}}  
                                         src={ this.state.imgUrl + this.state.company.logo} 
-                                        alt={this.state.company.logo}/>
+                                        alt={this.state.company.logo}
+                                    />
                             </div>
                         </div>
-
                         <div className="form-group row mb-4">
                             <label className="col-4 col-form-label text-right"> </label>
                             <div className="col-4 text-left">
@@ -161,14 +150,11 @@ class CompanyEdit extends Component {
                             </div>
                         </div>
                     </form>
-                    
                 </div>
-                
             </Fragment>
             )
         );
     }
 }
-
 
 export default CompanyEdit;

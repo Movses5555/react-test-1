@@ -6,7 +6,14 @@ class NavBar extends Component {
         return (
             <Fragment>
                 <nav className="navbar navbar-expand-sm navbar-light bg-light">
-                    <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+                    <button className="navbar-toggler" 
+                        type="button" 
+                        data-toggle="collapse" 
+                        data-target="#navbarTogglerDemo03" 
+                        aria-controls="navbarTogglerDemo03" 
+                        aria-expanded="false" 
+                        aria-label="Toggle navigation"
+                    >
                         <span className="navbar-toggler-icon"></span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarTogglerDemo03">
@@ -24,7 +31,6 @@ class NavBar extends Component {
                     </div>
                 </nav>
             </Fragment>
-            
         )
     } 
 }

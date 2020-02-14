@@ -3,12 +3,8 @@ import { Link } from 'react-router-dom';
 import Apis from '../../Services/ApiService/Api.js';
 import NavBar from '../NavBar';
 
-
-
 class CompanyIndex extends Component {
-
     Api = new Apis();
-
     constructor(){
         super();
         this.state = {
@@ -22,7 +18,6 @@ class CompanyIndex extends Component {
     componentDidMount() 
     {   
         this.setState({imgUrl : this.Api.imgURL});
-        
         this.Api.getAllCompanies()
             .then(res => {
                 this.setState({companies : res.data.data});
@@ -67,57 +62,57 @@ class CompanyIndex extends Component {
                             </tr>
                         </thead>
                         <tbody> 
-
-                            { this.state.companies.map((company => {
-                                return (
-                                    <tr className="row text-center m-0" key={company.id}>
-                                        <td className="col-2 pt-2">
-                                            <img src={this.state.imgUrl + company.logo} alt={company.logo} style={{ width: '50px', height: '50px' }} />
-                                        </td>
-                                        <td className="col-2 pt-2">{company.name}</td>
-                                        <td className="col-3 pt-2">{company.email}</td>
-                                        <td className="col-3 pt-2">{company.website}</td>
-                                        <td className="col-2">
-                                            <div className="row">
-                                                <div className="float-left mr-2 col-3" >
-                                                    <Link to={`/companies/${company.id}/edit`}>
-                                                        <button type="submit" className="btn btn-sm  bg-primary">
-                                                            <i style={{fontSize:'18px', color: 'black'}} className='far'>&#xf044;</i>
-                                                        </button>
-                                                    </Link>
-                                                    
-                                                    
-                                                </div>
-                                                <div className="float-left mr-2 col-3" >
-                                                    <Link to={`/companies/${company.id}`}>  
-                                                        <button type="submit" className="btn btn-sm  bg-primary">
-                                                            <i style={{fontSize:'18px'}} className="fa">&#xf06e;</i>
-                                                        </button>
-                                                    </Link>
-                                                </div>
-                                                <div className="float-left mr-2 col-3" >
-                                                <button className="btn btn-sm bg-danger" onClick={() => this.handleDelete(company.id)}>
+                            { 
+                                this.state.companies.map((company => {
+                                    return (
+                                        <tr className="row text-center m-0" key={company.id}>
+                                            <td className="col-2 pt-2">
+                                                <img src={this.state.imgUrl + company.logo} 
+                                                    alt={company.logo} style={{ width: '50px', height: '50px' }} 
+                                                />
+                                            </td>
+                                            <td className="col-2 pt-2">{company.name}</td>
+                                            <td className="col-3 pt-2">{company.email}</td>
+                                            <td className="col-3 pt-2">{company.website}</td>
+                                            <td className="col-2">
+                                                <div className="row">
+                                                    <div className="float-left mr-2 col-3" >
+                                                        <Link to={`/companies/${company.id}/edit`}>
+                                                            <button type="submit" className="btn btn-sm  bg-primary">
+                                                                <i style={{fontSize:'18px', color: 'black'}} 
+                                                                    className='far'
+                                                                >
+                                                                    &#xf044;
+                                                                </i>
+                                                            </button>
+                                                        </Link> 
+                                                    </div>
+                                                    <div className="float-left mr-2 col-3" >
+                                                        <Link to={`/companies/${company.id}`}>  
+                                                            <button type="submit" className="btn btn-sm  bg-primary">
+                                                                <i style={{fontSize:'18px'}} className="fa">&#xf06e;</i>
+                                                            </button>
+                                                        </Link>
+                                                    </div>
+                                                    <div className="float-left mr-2 col-3" >
+                                                        <button className="btn btn-sm bg-danger" 
+                                                            onClick={() => this.handleDelete(company.id)}
+                                                        >
                                                             <i style={{fontSize:'18px'}} className="fa">&#xf1f8;</i>
                                                         </button>
-
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )
-                            }))
-                            
+                                            </td>
+                                        </tr>
+                                    )
+                                }))
                             }
                         </tbody>
                     </table>
-                
-                
-                </div>
-                
+                </div> 
             </Fragment>
         );
     }
 }
-
 
 export default CompanyIndex;

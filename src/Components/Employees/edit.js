@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import Apis from '../../Services/ApiService/Api.js';
 import NavBar from '../NavBar'
 
-
-
 class EmployeeEdit extends Component {
     Api = new Apis();
     constructor(){
@@ -37,7 +35,6 @@ class EmployeeEdit extends Component {
     componentDidMount(){
         const id = Number(this.props.match.params.id);
         this.setState({param : id});
-
         this.Api.getAllEmployees()
             .then(res => {
                 const resData = res.data;
@@ -66,27 +63,21 @@ class EmployeeEdit extends Component {
                 })
             }) 
             .catch(err => { 
-                console.log(err)
                 this.setState({errorMessage: err.message});
             })
-        
-        
     }
 
     handleSubmit (e){
         e.preventDefault();
         const id = Number(this.props.match.params.id);
         const data = this.state.employee;
-        
         this.Api.updateEmployee(id, data)
             .then((res) => {
                 this.props.history.push('/employees');
             })
             .catch(err => { 
-                console.log(err)
                 this.setState({errorMessage: err.message});
             })
-            
     }
 
     handleChange(e) {
@@ -107,28 +98,14 @@ class EmployeeEdit extends Component {
         return (
             <Fragment>
                 <NavBar></NavBar>
-                
                 <div className="m-4 text-right">
                     <Link to="/employees" className="btn btn-success mb-1">
                        Back
                     </Link>
                 </div>
                 <div>
-                    <p> {this.state.errorMessage} </p>
-                    {/* {
-                        if ( { this.state.errorMessage} ) {
-                            return (
-                                <div class="error_message alert alert-warning alert-dismissible" role="alert">
-                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                    <p> {this.state.errorMessage} </p>
-                                </div>
-                            )
-                        }
-                    } */}
+                    <p>{this.state.errorMessage}</p>
                 </div>
-                
                 <div>
                     <form method="POST" action="" onSubmit={this.handleSubmit}>  
                         <div className="form-group row">
@@ -155,7 +132,6 @@ class EmployeeEdit extends Component {
                                 />
                             </div>
                         </div>  
-
                         <div className="form-group row">
                             <label className="col-4 col-form-label text-right"><b> Company :</b> </label>
                             <div className="col-6">
@@ -171,7 +147,6 @@ class EmployeeEdit extends Component {
                                                         defaultValue={compName} 
                                                         onChange={this.handleChange}
                                                 >
-                                                    
                                                     {
                                                         this.state.companies.map(item => {
                                                             return (
@@ -190,10 +165,8 @@ class EmployeeEdit extends Component {
                                         }
                                     })
                                 }
-                                
                             </div>
                         </div>
-
                         <div className="form-group row">
                             <label className="col-4 col-form-label text-right"><b> Email :</b> </label>
                             <div className="col-6">
@@ -218,7 +191,6 @@ class EmployeeEdit extends Component {
                                 />
                             </div>
                         </div>
-
                         <div className="form-group row mb-4">
                             <label className="col-4 col-form-label text-right"> </label>
                             <div className="col-6 text-left">
@@ -228,13 +200,10 @@ class EmployeeEdit extends Component {
                             </div>
                         </div>
                     </form>
-                    
                 </div>
-                
             </Fragment>
         );
     }
 }
-
 
 export default EmployeeEdit;

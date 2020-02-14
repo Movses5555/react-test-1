@@ -2,13 +2,6 @@ import React, { Component } from 'react';
 import Login from './Login';
 
 class Logout extends Component {
-
-    constructor(){
-        super();
-        this.state = {
-            token : '',
-        };
-    }
     componentDidMount() {
         localStorage.removeItem('token');
         this.props.history.push('/login');
@@ -19,4 +12,5 @@ class Logout extends Component {
         );
     }
 }
+
 export default Logout

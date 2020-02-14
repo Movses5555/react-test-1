@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 import Apis from '../../Services/ApiService/Api.js';
 import NavBar from '../NavBar';
 
-
-
 class EmployeeCreate extends Component {
     Api = new Apis();
     constructor(){
@@ -18,7 +16,6 @@ class EmployeeCreate extends Component {
                 phone: ''
             },
             companies: [],
-            inProgress: true,
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -42,10 +39,8 @@ class EmployeeCreate extends Component {
                     email: '',
                     phone: ''
                 }
-                
                 this.setState({
                     employee : emptyData,
-                    inProgress: false,
                 })
             })
             .catch(error => {
@@ -63,7 +58,6 @@ class EmployeeCreate extends Component {
                     [name]: value
                 }, 
             }
-
         });
     };
 
@@ -72,14 +66,11 @@ class EmployeeCreate extends Component {
         return (
             <Fragment>
                 <NavBar></NavBar>
-                
-                
                 <div className="m-4 text-right">
                     <Link to="/employees" className="btn btn-success mb-1">
                        Back
                     </Link>
                 </div>
-
                 <div>
                     <form method="POST" action="" onSubmit={this.handleSubmit}>  
                         <div className="form-group row">
@@ -106,25 +97,31 @@ class EmployeeCreate extends Component {
                                 />
                             </div>
                         </div>  
-
                         <div className="form-group row">
                             <label className="col-4 col-form-label text-right"><b> Company :</b> </label>
                             <div className="col-6">
-                                <select name="company_id" className="form-control" id="company-id" value={employee.company_id} onChange={this.handleChange}>
+                                <select name="company_id" 
+                                    className="form-control" 
+                                    id="company-id" 
+                                    value={employee.company_id} 
+                                    onChange={this.handleChange}
+                                >
                                     <option disabled value=''> Choose Company </option>
-       
                                     {   
                                         this.state.companies.map(company => {
                                             return (
-                                                <option key={company.id} value={company.id} className="form-control">{company.name}</option>
+                                                <option key={company.id} 
+                                                    value={company.id} 
+                                                    className="form-control"
+                                                >
+                                                    {company.name}
+                                                </option>
                                             )
                                         })
                                     }
-                                
                                 </select>
                             </div>
                         </div>
-
                         <div className="form-group row">
                             <label className="col-4 col-form-label text-right"><b> Email :</b> </label>
                             <div className="col-6">
@@ -149,7 +146,6 @@ class EmployeeCreate extends Component {
                                 />
                             </div>
                         </div>
-
                         <div className="form-group row mb-4">
                             <label className="col-4 col-form-label text-right"> </label>
                             <div className="col-4 text-left">
@@ -158,15 +154,11 @@ class EmployeeCreate extends Component {
                                 </button>
                             </div>
                         </div>
-    
                     </form>
-                    
                 </div>
-                
             </Fragment>
         );
     }
 }
-
 
 export default EmployeeCreate;

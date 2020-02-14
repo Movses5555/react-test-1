@@ -3,10 +3,8 @@ import { Link } from 'react-router-dom';
 import NavBar from '../NavBar';
 import Apis from '../../Services/ApiService/Api';
 
-
 class EmployeeIndex extends Component {
     Api = new Apis();
-
     constructor(){
         super();
         this.state = {
@@ -30,11 +28,9 @@ class EmployeeIndex extends Component {
                 const newData = data.filter(item => id !== item.id);
                 this.setState({employees : newData})
             }).catch(err => { 
-                console.log('ERRRRRR',err)
                 this.setState({errorMessage: err.message});
             })
     }
-
 
     render() {
         return (
@@ -58,11 +54,9 @@ class EmployeeIndex extends Component {
                                 <th className="col-2">Email</th>
                                 <th className="col-2">Phone</th>
                                 <th className="col-2">Action</th>
-
                             </tr>
                         </thead>
                         <tbody> 
-
                             { 
                                 this.state.employees.map(employee => {
                                     return (
@@ -98,18 +92,13 @@ class EmployeeIndex extends Component {
                                         </tr>
                                     )
                                 })
-                            
                             }
                         </tbody>
                     </table>
-                </div>
-                <div>
-                
-                </div>         
+                </div>     
             </Fragment>
         );
     }
 }
-
 
 export default EmployeeIndex;

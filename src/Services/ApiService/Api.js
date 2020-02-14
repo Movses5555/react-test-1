@@ -15,11 +15,6 @@ class Api {
             }
         );
     }
-    headers = {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': '*',
-    }
 
     baseUrl = 'http://laravel.loc';
     companiesURL = `${this.baseUrl}/api/companies`;
@@ -28,9 +23,6 @@ class Api {
 
     getToken(){
         return localStorage.getItem('token');
-    }
-    getImage(image) {
-        return this.imgURL + image;
     }
     signIn(data) {
         return axios.post(`${this.baseUrl}/api/auth/login`, data, {
@@ -44,7 +36,6 @@ class Api {
     fileUpload(data) {
         var formData = new FormData();
         formData.set('logo', data);
-        
         return axios.post(`${this.baseUrl}/upload`, formData, {
             headers: {
                 'Authorization': `bearer ${this.getToken()}`,
@@ -53,7 +44,6 @@ class Api {
         })
     }
 
-    
     ///                       Companies 
 
     getAllCompanies(page = 1) {
@@ -62,7 +52,7 @@ class Api {
                 'Authorization': `bearer  ${this.getToken()}`
             }
         });
-    }  
+    } 
     getCompany(id) {
         return this.Auth.get(`${this.companiesURL}/${id}` , {
             headers: {
@@ -74,7 +64,6 @@ class Api {
         return this.Auth.post(this.companiesURL, data, {
             headers: {
                 'Authorization': `bearer  ${this.getToken()}`,
-                //"Content-Type": "multipart/form-data",
             }
         });
     }
@@ -82,8 +71,6 @@ class Api {
         return this.Auth.put(`${this.companiesURL}/${id}`, data, {
             headers: {
                 'Authorization': `bearer  ${this.getToken()}`,
-                // "Content-Type": "application/x-www-form-urlencoded",
-                //"Content-Type": "multipart/form-data",
                 'Accept': 'application/json'
             }
         });
@@ -95,7 +82,6 @@ class Api {
             }
         });
     }
-
 
     /////               Employyes
 
@@ -124,7 +110,6 @@ class Api {
         return this.Auth.put(`${this.employeesURL}/${id}`, data , {
             headers: {
                 'Authorization': `bearer  ${this.getToken()}`,
-                //"Content-Type": "multipart/form-data",
                 'Accept': 'application/json'
             }
         });
@@ -137,6 +122,5 @@ class Api {
         });
     };
 }
+
 export default Api;
-
-

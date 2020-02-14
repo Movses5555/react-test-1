@@ -3,7 +3,6 @@ import Apis from '../Services/ApiService/Api'
 
 class FormLogin extends Component {
     Api = new Apis();
-
     constructor(props){
         super(props);
         this.state = {
@@ -38,7 +37,6 @@ class FormLogin extends Component {
     }
 
     render() {
-
         return (
             <Fragment>
                 <form method="POST" onSubmit={this.handleSubmit}>       
@@ -77,5 +75,4 @@ class FormLogin extends Component {
     }
 }
 
-
-export default FormLogin
+export default FormLogin;

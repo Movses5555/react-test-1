@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import { Route, Redirect } from "react-router-dom";
 
-export default class PrivateRouter extends Component {
+class PrivateRouter extends Component {
     state = {
         isLoggedIn: true,
     };
-
     componentDidMount() {
         let state = localStorage["token"];
         if (state) {
@@ -31,3 +30,5 @@ export default class PrivateRouter extends Component {
         );
     }
 }
+
+export default PrivateRouter;

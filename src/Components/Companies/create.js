@@ -1,9 +1,7 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import Apis from '../../Services/ApiService/Api.js';
-import NavBar from '../NavBar'
-
-
+import NavBar from '../NavBar';
 
 class CompanyCreate extends Component {
     Api = new Apis();
@@ -16,10 +14,7 @@ class CompanyCreate extends Component {
                 website: '',
                 logo: ''
             },
-            fileInput: '',
-            errorMessage: ''
         }
-        
         this.handleChange = this.handleChange.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
@@ -28,7 +23,6 @@ class CompanyCreate extends Component {
     handleSubmit(e) {
         e.preventDefault();
         const data = this.state.company;
-
         this.Api.setCompany(data)
             .then(response => { 
                 const emptyData = {
@@ -39,18 +33,15 @@ class CompanyCreate extends Component {
                 }
                 this.setState({
                     company : emptyData,
-                    inProgress: false,
                 })
             })
             .catch(error => {
                 console.log(error)
             });
-        
     }
 
     handleFileChange(e) {
         const file = e.target.files[0];
-
         this.Api.fileUpload(file)
             .then(res=>{
                 const data = this.state.company;
@@ -79,7 +70,6 @@ class CompanyCreate extends Component {
     };
 
     render() {
-        
         return (
             <Fragment>
                 <NavBar></NavBar>
@@ -136,7 +126,6 @@ class CompanyCreate extends Component {
                                 />
                             </div>
                         </div>
-
                         <div className="form-group row mb-4">
                             <label className="col-4 col-form-label text-right"> </label>
                             <div className="col-4 text-left">
@@ -145,18 +134,11 @@ class CompanyCreate extends Component {
                                 </button>
                             </div>
                         </div>
-
-
-                        
-    
-                    </form>
-                    
+                    </form>        
                 </div>
-                
             </Fragment>
         );
     }
 }
-
 
 export default CompanyCreate;

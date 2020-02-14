@@ -31,4 +31,5 @@ class PrivateRouter extends Component {
         );
     }
 }
+
 export default PrivateRouter;
