@@ -25,15 +25,7 @@ class CompanyCreate extends Component {
         const data = this.state.company;
         this.Api.setCompany(data)
             .then(response => { 
-                const emptyData = {
-                    name: '',
-                    email: '',
-                    website: '',
-                    logo: ''
-                }
-                this.setState({
-                    company : emptyData,
-                })
+                this.props.history.push('/companies');
             })
             .catch(error => {
                 console.log(error)

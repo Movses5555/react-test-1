@@ -1,44 +1,20 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from "react-redux";
 import Apis from '../../Services/ApiService/Api.js';
 import NavBar from '../NavBar';
+import { getAllCompanies, deleteCompany } from '../../store/Actions/companies';
 
 class CompanyIndex extends Component {
     Api = new Apis();
-    constructor(){
-        super();
-        this.state = {
-            companies: [],
-            errorMessage: '',
-            imgUrl : "",
-        };
-        this.handleDelete = this.handleDelete.bind(this)
-    }
     
     componentDidMount() 
-    {   
-        this.setState({imgUrl : this.Api.imgURL});
-        this.Api.getAllCompanies()
-            .then(res => {
-                this.setState({companies : res.data.data});
-            }).catch(err => {
-                this.setState({errorMessage: err})
-            })      
-    }
-    handleDelete(id)
-    {   
-        const data = this.state.companies;
-        this.Api.destroyCompany(id)
-            .then(res => {
-                const newData = data.filter(item => id !== item.id);
-                this.setState({companies : newData})
-            })
-            .catch(err => {
-                console.log(err);
-            })
+    {      
+        this.props.getAllCompanies();
     }
 
     render() {
+        const { companies } = this.props.companies;
         return (
             <Fragment>
                 <NavBar></NavBar>
@@ -48,7 +24,7 @@ class CompanyIndex extends Component {
                     </Link> 
                 </div>
                 <div>
-                    <p>{this.state.errorMessage}</p>
+                    {/* <p>{this.state.errorMessage}</p> */}
                 </div>
                 <div className="mt-5">              
                     <table className="col-12 table " >
@@ -63,11 +39,11 @@ class CompanyIndex extends Component {
                         </thead>
                         <tbody> 
                             { 
-                                this.state.companies.map((company => {
+                                companies.map((company => {
                                     return (
                                         <tr className="row text-center m-0" key={company.id}>
                                             <td className="col-2 pt-2">
-                                                <img src={this.state.imgUrl + company.logo} 
+                                                <img src={this.Api.getImage(company.logo)} 
                                                     alt={company.logo} style={{ width: '50px', height: '50px' }} 
                                                 />
                                             </td>
@@ -96,7 +72,7 @@ class CompanyIndex extends Component {
                                                     </div>
                                                     <div className="float-left mr-2 col-3" >
                                                         <button className="btn btn-sm bg-danger" 
-                                                            onClick={() => this.handleDelete(company.id)}
+                                                            onClick={() => this.props.deleteCompany(company.id)}
                                                         >
                                                             <i style={{fontSize:'18px'}} className="fa">&#xf1f8;</i>
                                                         </button>
@@ -114,5 +90,18 @@ class CompanyIndex extends Component {
         );
     }
 }
+const mapStateToProps = state => {
+    return {
+        companies: state.companies
+    };
+};
 
-export default CompanyIndex;
+const mapDispatchToProps = dispatch => {
+    return {
+        getAllCompanies: page => {dispatch(getAllCompanies(page))},
+        deleteCompany: id => {dispatch(deleteCompany(id))}
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CompanyIndex);
+//export default CompanyIndex;

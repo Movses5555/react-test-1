@@ -31,17 +31,8 @@ class EmployeeCreate extends Component {
         e.preventDefault();
         const data = this.state.employee;
         this.Api.setEmployee(data)
-            .then(response => { 
-                const emptyData = {
-                    firstname: '',
-                    lastname: '',
-                    company_id: '',
-                    email: '',
-                    phone: ''
-                }
-                this.setState({
-                    employee : emptyData,
-                })
+            .then(res => { 
+                this.props.history.push('/employees');
             })
             .catch(error => {
                 console.log(error)

@@ -1,38 +1,21 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from "react-redux";
 import NavBar from '../NavBar';
 import Apis from '../../Services/ApiService/Api';
+import { getAllEmployees, deleteEmployee} from '../../store/Actions/employees'
+
 
 class EmployeeIndex extends Component {
     Api = new Apis();
-    constructor(){
-        super();
-        this.state = {
-            employees: [],
-            errorMessage: '',
-        };
-        this.handleDelete = this.handleDelete.bind(this)
-    }
     
     componentDidMount() 
     {   
-        this.Api.getAllEmployees().then(res => {
-            this.setState({employees : res.data.employees.data});
-        })      
+        this.props.getAllEmployees();     
     }
-    handleDelete(id)
-    {   
-        const data = this.state.employees;
-        this.Api.destroyEmployee(id)
-            .then(res => {
-                const newData = data.filter(item => id !== item.id);
-                this.setState({employees : newData})
-            }).catch(err => { 
-                this.setState({errorMessage: err.message});
-            })
-    }
-
+    
     render() {
+        const { employees, errors } = this.props.employees;
         return (
             <Fragment>
                 <NavBar></NavBar>
@@ -42,7 +25,7 @@ class EmployeeIndex extends Component {
                     </Link> 
                 </div>
                 <div>
-                    <p>{this.state.errorMessage}</p>
+                    <p>{errors}</p>
                 </div>
                 <div>
                     <table className="col-12 table " >
@@ -58,7 +41,7 @@ class EmployeeIndex extends Component {
                         </thead>
                         <tbody> 
                             { 
-                                this.state.employees.map(employee => {
+                                employees.map(employee => {
                                     return (
                                         <tr className="row text-center m-0" key={employee.id}>
                                             <td className="col-2 pt-2">{employee.firstname} </td>
@@ -83,7 +66,7 @@ class EmployeeIndex extends Component {
                                                         </Link>
                                                     </div>
                                                     <div className="float-left mr-2 col-3" >
-                                                        <button className="btn btn-sm bg-danger" onClick={() => this.handleDelete(employee.id)}>
+                                                        <button className="btn btn-sm bg-danger" onClick={() => this.props.deleteEmployee(employee.id)}>
                                                             <i style={{fontSize:'18px'}} className="fa">&#xf1f8;</i>
                                                         </button>
                                                     </div>
@@ -100,5 +83,16 @@ class EmployeeIndex extends Component {
         );
     }
 }
+const mapStateToProps = state => {
+    return {
+        employees: state.employees
+    };
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        getAllEmployees: page => {dispatch(getAllEmployees(page))},
+        deleteEmployee: id => {dispatch(deleteEmployee(id))}
+    };
+};
 
-export default EmployeeIndex;
+export default connect(mapStateToProps,mapDispatchToProps)(EmployeeIndex);

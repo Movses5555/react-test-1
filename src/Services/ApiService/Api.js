@@ -24,6 +24,9 @@ class Api {
     getToken(){
         return localStorage.getItem('token');
     }
+    getImage(image) {
+        return this.imgURL + image;
+    }
     signIn(data) {
         return axios.post(`${this.baseUrl}/api/auth/login`, data, {
             headers: {
