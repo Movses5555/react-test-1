@@ -13,12 +13,12 @@ export const getAllCompanies =  (page = 1) => {
                 dispatch(
                     {
                         type: GET_ALL_COMPANIES,
-                        payload: res.data.data
+                        payload: res.data
                     }
                 );
             })
             .catch(error => {
-                console.log(error);
+                throw error;
             });
     };
 };

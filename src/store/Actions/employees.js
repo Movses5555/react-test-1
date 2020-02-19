@@ -13,18 +13,17 @@ export const getAllEmployees =  (page = 1) => {
                     dispatch(
                         {
                             type: GET_ALL_EMPLOYEES,
-                            payload: res.data.employees.data
+                            payload: res.data.employees
                         }
                     );
                 })
                 .catch(error => {
-                    console.log(error);
+                    throw error;
                 });
     };
 };
 
 export const deleteEmployee = (id) => {
-
     return dispatch => {
         api.destroyEmployee(id)
             .then(response => {
@@ -47,13 +46,4 @@ export const deleteEmployee = (id) => {
             });
     };
 };
-
-
-
-
-
-
-
-
-
 

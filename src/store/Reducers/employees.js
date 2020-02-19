@@ -5,6 +5,7 @@ import {
 
 const initialState = {
     employees: [],
+    allData: [],
     errors: [],
     success: false,
 };
@@ -12,7 +13,7 @@ const initialState = {
 export default function employeesReducer(state = initialState, action) {
     switch (action.type) {
         case GET_ALL_EMPLOYEES:
-                return { ...state, employees: action.payload,  errors: []};
+                return { ...state, employees: action.payload.data, allData: action.payload, errors: []};
         case DELETE_EMPLOYEE:
             if (action.payload.response.status === 422) {
                 return {...state, errors: Object.values(action.payload.data.errors) , success: false};

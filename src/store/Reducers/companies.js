@@ -5,6 +5,7 @@ import {
 
 const initialState = {
     companies: [],
+    allData: [],
     errors: [],
     success: false,
 };
@@ -12,13 +13,13 @@ const initialState = {
 export default function companiesReducer(state = initialState, action) {
     switch (action.type) {
         case GET_ALL_COMPANIES:
-            return { ...state, companies: action.payload , errors: [] };
+            return { ...state, companies: action.payload.data, allData : action.payload, errors: [] };
         case DELETE_COMPANY:
             if (action.payload.response.status === 422) {
                 return {...state, errors: Object.values(action.payload.data.errors) , success: false};
             } else {
-                const {companies} = {...state};
-                const newCompanies = companies.filter(company => company.id !== action.payload.id);              
+                const {companies} = {...state};     
+                const newCompanies = companies.filter(company => company.id !== action.payload.id);
                 return {...state, companies : newCompanies, success: true};
             }
         default:

@@ -1,20 +1,46 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from "react-redux";
+import Paginate from '../Pageination'; 
 import Apis from '../../Services/ApiService/Api.js';
 import NavBar from '../NavBar';
 import { getAllCompanies, deleteCompany } from '../../store/Actions/companies';
-
+import SuccessMessage from '../successMsg';
 class CompanyIndex extends Component {
     Api = new Apis();
-    
+    constructor(){
+        super()
+        this.state = {
+            success : false
+        }
+        this.handleDelete = this.handleDelete.bind(this)
+    }
     componentDidMount() 
-    {      
+    {    
+        if ( this.props.location.state && this.props.location.state.success) {
+            this.setState({
+                success : this.props.location.state.success
+            })
+            setTimeout(()=>{
+                this.setState({
+                    success : null
+                });
+                this.props.location.state.success = null;
+            }, 2000)
+        }
         this.props.getAllCompanies();
     }
-
+    handleDelete(id) {
+        this.props.getAllCompanies(1);
+        this.props.deleteCompany(id);
+        this.props.history.push({
+            pathname: '/companies',
+            state: { success: true }
+        });
+    }
     render() {
-        const { companies } = this.props.companies;
+        const { companies} = this.props.companies;
+        const { ...allData } = this.props.allData;
         return (
             <Fragment>
                 <NavBar></NavBar>
@@ -23,9 +49,10 @@ class CompanyIndex extends Component {
                         Add
                     </Link> 
                 </div>
-                <div>
-                    {/* <p>{this.state.errorMessage}</p> */}
-                </div>
+                <SuccessMessage
+                    message="Add Company"
+                    success={this.state.success}
+                />
                 <div className="mt-5">              
                     <table className="col-12 table " >
                         <thead>
@@ -72,7 +99,7 @@ class CompanyIndex extends Component {
                                                     </div>
                                                     <div className="float-left mr-2 col-3" >
                                                         <button className="btn btn-sm bg-danger" 
-                                                            onClick={() => this.props.deleteCompany(company.id)}
+                                                            onClick={() => this.handleDelete(company.id)}
                                                         >
                                                             <i style={{fontSize:'18px'}} className="fa">&#xf1f8;</i>
                                                         </button>
@@ -86,13 +113,25 @@ class CompanyIndex extends Component {
                         </tbody>
                     </table>
                 </div> 
+                <div className="d-flex justify-content-center">
+                    <nav aria-label="Page navigation example">
+                        <ul className="pagination">
+                            <Paginate
+                                total={allData.last_page}
+                                currentPage={allData.current_page}
+                                click={page => this.props.getAllCompanies(page)}
+                            />
+                        </ul>
+                    </nav>
+                </div>
             </Fragment>
         );
     }
 }
 const mapStateToProps = state => {
     return {
-        companies: state.companies
+        companies: state.companies,
+        allData : state.companies.allData
     };
 };
 
@@ -104,4 +143,4 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(CompanyIndex);
-//export default CompanyIndex;
+
