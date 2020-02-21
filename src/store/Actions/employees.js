@@ -13,7 +13,7 @@ export const getAllEmployees =  (page = 1) => {
                     dispatch(
                         {
                             type: GET_ALL_EMPLOYEES,
-                            payload: res.data.employees
+                            payload: res.data
                         }
                     );
                 })

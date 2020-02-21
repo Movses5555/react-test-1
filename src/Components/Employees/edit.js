@@ -43,32 +43,22 @@ class EmployeeEdit extends Component {
     componentDidMount(){
         const id = Number(this.props.match.params.id);
         this.setState({param : id});
-        this.Api.getAllEmployees()
+
+        this.Api.getEmployee(id)
             .then(res => {
-                const resData = res.data;
                 this.setState({
-                    companies : resData.companies
+                    employee : res.data
                 });
-                const resEmp = resData.employees.data;
-                for ( let i = 0; i < resEmp.length; i++ ) {
-                    if ( resEmp[i].id === id ) {
-                        this.setState({
-                            employee : resEmp[i]
-                        })
-                    }
-                }
-                this.state.companies.map(company => {
-                    if (company.id === Number(this.state.employee.company_id)) {
-                        this.setState((state) => {
-                            return {
-                                currentCompany : {
-                                    ...company
-                                }
-                            }    
-                        });
-                        
-                    }
-                })
+            }) 
+            .catch(err => { 
+                this.setState({errorMessage: err.message});
+            })
+
+        this.Api.getAllCompanies()
+            .then(res => {
+                this.setState({
+                    companies : res.data.data
+                });
             }) 
             .catch(err => { 
                 this.setState({errorMessage: err.message});
@@ -98,7 +88,7 @@ class EmployeeEdit extends Component {
 
     handleChange(e) {
         const validEmailRegex = 
-            RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+            RegExp(/^(([^<>()\\[\]\\.,;:\s@\\"]+(\.[^<>()\\[\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\]\\.,;:\s@\\"]+\.)+[^<>()[\]\\.,;:\s@\\"]{2,})$/i);
         const { name , value } = e.target;
         let errors = this.state.errors;
         this.setState((state)=>{
@@ -195,6 +185,7 @@ class EmployeeEdit extends Component {
                         </div>  
                         <div className="form-group row">
                             <label className="col-4 col-form-label text-right"><b> Company :</b> </label>
+                           
                             <div className="col-6">
                                 {    
                                     this.state.companies.map((company) => {

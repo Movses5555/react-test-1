@@ -10,7 +10,6 @@ class CompanyShow extends Component {
         this.state = {
             company: {},
             param: 'param',
-            imgUrl : '',
             inProgress: true,
             style : {
                 maxWidth: '500px', 
@@ -22,7 +21,6 @@ class CompanyShow extends Component {
     
     componentDidMount() 
     {    
-        this.setState({imgUrl : this.Api.imgURL});
         const id = Number(this.props.match.params.id);
         this.setState({param : id});
         this.Api.getAllCompanies().then(res => {
@@ -54,7 +52,7 @@ class CompanyShow extends Component {
                         <div className='row'>
                             <div className='text-center m-4 w-100'>
                                 <img className='w-50' 
-                                    src={this.state.imgUrl + this.state.company.logo} 
+                                    src={this.state.company.full_logo} 
                                     alt='logo' 
                                 />
                             </div>

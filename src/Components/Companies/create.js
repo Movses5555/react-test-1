@@ -39,7 +39,7 @@ class CompanyCreate extends Component {
                 .then(res => { 
                     this.props.history.push({
                         pathname: '/companies',
-                        state: { success: true }
+                        state: { success: true, message : 'Add Company' }
                     });
                 })
                 .catch(err => {
@@ -83,7 +83,7 @@ class CompanyCreate extends Component {
 
     handleChange(e) {
         const validEmailRegex = 
-            RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+            RegExp(/^(([^<>()\\[\]\\.,;:\s@\\"]+(\.[^<>()\\[\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\]\\.,;:\s@\\"]+\.)+[^<>()[\]\\.,;:\s@\\"]{2,})$/i);
         const { name , value } = e.target;
         let errors = this.state.errors;
         this.setState((state)=>{

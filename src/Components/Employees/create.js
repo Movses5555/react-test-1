@@ -31,9 +31,9 @@ class EmployeeCreate extends Component {
     }
 
     componentDidMount() {
-        this.Api.getAllEmployees()
+        this.Api.getAllCompanies()
         .then(res => {
-            this.setState({companies : res.data.companies});
+            this.setState({companies : res.data.data});
         })  
         .catch(err => {
             this.setState({errorMessage: err.message});
@@ -65,7 +65,7 @@ class EmployeeCreate extends Component {
 
     handleChange(e) {
         const validEmailRegex = 
-            RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+            RegExp(/^(([^<>()\\[\]\\.,;:\s@\\"]+(\.[^<>()\\[\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\]\\.,;:\s@\\"]+\.)+[^<>()[\]\\.,;:\s@\\"]{2,})$/i);
         const { name , value } = e.target;
         let errors = this.state.errors;
         this.setState((state) => {

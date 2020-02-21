@@ -30,7 +30,7 @@ class EmployeeIndex extends Component {
                 this.props.location.state.success = null;
             }, 2000)
         }
-        this.props.getAllEmployees();     
+        this.props.getAllEmployees();
     }
     handleDelete(id) {
         this.props.getAllEmployees(1);

@@ -11,31 +11,36 @@ class CompanyIndex extends Component {
     constructor(){
         super()
         this.state = {
-            success : false
+            success : false,
+            message: ''
         }
         this.handleDelete = this.handleDelete.bind(this)
     }
     componentDidMount() 
     {    
+        this.props.getAllCompanies();
+
         if ( this.props.location.state && this.props.location.state.success) {
             this.setState({
-                success : this.props.location.state.success
+                success : this.props.location.state.success,
+                message: this.props.location.state.message
             })
             setTimeout(()=>{
                 this.setState({
                     success : null
                 });
                 this.props.location.state.success = null;
+                this.props.location.state.message = ''
             }, 2000)
         }
-        this.props.getAllCompanies();
+        
     }
     handleDelete(id) {
         this.props.getAllCompanies(1);
         this.props.deleteCompany(id);
         this.props.history.push({
             pathname: '/companies',
-            state: { success: true }
+            state: { success: true, message : 'Delete Company' }
         });
     }
     render() {
@@ -50,7 +55,7 @@ class CompanyIndex extends Component {
                     </Link> 
                 </div>
                 <SuccessMessage
-                    message="Add Company"
+                    message={this.state.message}
                     success={this.state.success}
                 />
                 <div className="mt-5">              
@@ -70,7 +75,7 @@ class CompanyIndex extends Component {
                                     return (
                                         <tr className="row text-center m-0" key={company.id}>
                                             <td className="col-2 pt-2">
-                                                <img src={this.Api.getImage(company.logo)} 
+                                                <img src={company.full_logo} 
                                                     alt={company.logo} style={{ width: '50px', height: '50px' }} 
                                                 />
                                             </td>

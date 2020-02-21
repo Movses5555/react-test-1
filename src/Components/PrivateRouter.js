@@ -3,17 +3,8 @@ import { Route, Redirect } from "react-router-dom";
 
 class PrivateRouter extends Component {
     state = {
-        isLoggedIn: true,
+        isLoggedIn: localStorage.getItem("token"),
     };
-
-    componentDidMount() {
-        let state = localStorage.getItem("token");
-        if (state) {
-            this.setState({ isLoggedIn: true});
-        } else {
-            this.setState({ isLoggedIn: false });
-        }
-    }
 
     render() {
         const { component: Component, ...rest } = this.props;
@@ -21,10 +12,10 @@ class PrivateRouter extends Component {
             <Route
                 {...rest}
                 render={props =>
-                    this.state.isLoggedIn ? (
+                    (this.state.isLoggedIn !== null) ? (
                         <Component {...props} />
                     ) : (
-                        <Redirect to="/login" />
+                        <Redirect to="/login"/>
                     )
                 }
             />

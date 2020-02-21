@@ -80,7 +80,7 @@ class CompanyEdit extends Component {
                 })
                 this.props.history.push({
                     pathname: '/companies',
-                    state: { success: true }
+                    state: { message: 'Updata Company', success: true }
                 });
             })
             .catch((err) => {
@@ -90,7 +90,7 @@ class CompanyEdit extends Component {
 
     handleChange(e) {
         const validEmailRegex = 
-            RegExp(/^(([^<>()\[\]\.,;:\s@\"]+(\.[^<>()\[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i);
+            RegExp(/^(([^<>()\\[\]\\.,;:\s@\\"]+(\.[^<>()\\[\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\]\\.,;:\s@\\"]+\.)+[^<>()[\]\\.,;:\s@\\"]{2,})$/i);
         const { name , value } = e.target;
         let errors = this.state.errors;
         this.setState((state)=>{
@@ -198,7 +198,7 @@ class CompanyEdit extends Component {
                                     onChange={this.handleFileChange}
                                 />
                                     <img style={{'width' : '50px', 'height': 'auto'}}  
-                                        src={ this.state.imgUrl + this.state.company.logo} 
+                                        src={ this.state.company.full_logo} 
                                         alt={this.state.company.logo}
                                     />
                                     {errors.logo.length > 0 &&  <span className='text-danger'>{errors.logo}</span>}
