@@ -15,13 +15,22 @@ class CompanyEdit extends Component {
                 website: '',
                 logo: ''
             },
+            errors: {
+                name: '',
+                email: '',
+                website: '',
+                logo: '',
+            },
+            success: false,
             param: 1,
             imgUrl: '',
             inProgress: true,
+            errorMessage: [],
         }
         this.handleChange = this.handleChange.bind(this);
         this.handleFileChange = this.handleFileChange.bind(this);
         this.handelSubmit = this.handelSubmit.bind(this);
+        this.validateForm = this.validateForm.bind(this)
     }
 
     componentDidMount(){
@@ -33,11 +42,19 @@ class CompanyEdit extends Component {
         this.Api.getCompany(id)
             .then(res => {
                 const data = res.data;
-                this.setState({company: data})
+                this.setState({company: data, inProgress : false})
             })
             .catch(err => {
-                console.log('Error : ', err)
+                this.setState({errorMessage: err.message});
             })        
+    }
+
+    validateForm = (errors) => {
+        let valid = true;
+        Object.values(errors).forEach(
+          (val) => val.length > 0 && (valid = false)
+        );
+        return valid;
     }
 
     handleFileChange(e) {
@@ -49,7 +66,7 @@ class CompanyEdit extends Component {
                 this.setState({company : data})
             })
             .catch((err) => {
-                console.log('EEEEEE ----',err);
+                this.setState({errorMessage: err.message});
             })
     }
 
@@ -61,13 +78,21 @@ class CompanyEdit extends Component {
                 this.setState((state)=>{
                     state.successAdd = res;
                 })
-                this.props.history.push('/companies');
+                this.props.history.push({
+                    pathname: '/companies',
+                    state: { message: 'Updata Company', success: true }
+                });
+            })
+            .catch((err) => {
+                this.setState({errorMessage: err.message});
             })
     }
 
     handleChange(e) {
-        let value = e.target.value;
-        const name = e.target.name;
+        const validEmailRegex = 
+            RegExp(/^(([^<>()\\[\]\\.,;:\s@\\"]+(\.[^<>()\\[\]\\.,;:\s@\\"]+)*)|(\\".+\\"))@(([^<>()[\]\\.,;:\s@\\"]+\.)+[^<>()[\]\\.,;:\s@\\"]{2,})$/i);
+        const { name , value } = e.target;
+        let errors = this.state.errors;
         this.setState((state)=>{
             return {
                 company: {
@@ -76,9 +101,33 @@ class CompanyEdit extends Component {
                 }, 
             }
         });
+        switch (name) {
+            case 'name': 
+              errors.name = 
+                value.length > 2
+                  ? ''
+                  : 'Name must be 2 characters long!';
+              break;
+            case 'email': 
+              errors.email = 
+                validEmailRegex.test(value)
+                  ? ''
+                  : 'Email is not valid!';
+              break;
+            case 'website': 
+              errors.website = 
+                value.length < 2
+                  ? 'Website must be 2 characters long!'
+                  : '';
+              break;
+            default:
+              break;
+          }
+        this.setState({errors, [name]: value})
     };
 
     render() {
+        const {errors} = this.state;
         return (
             !this.state.inProgress && (
             <Fragment>
@@ -88,6 +137,16 @@ class CompanyEdit extends Component {
                        Back
                     </Link>
                 </div>
+                {   
+                    this.state.employees &&
+                        <div className="alert alert-danger">
+                            <ul>
+                                {this.state.errorMessage.map((err, index) => (
+                                    <li key={index}>{err}</li>
+                                ))}
+                            </ul>
+                        </div>
+                }
                 <div>
                     <form method="POST" action="" onSubmit={this.handelSubmit}>  
                         <div className="form-group row">
@@ -100,6 +159,7 @@ class CompanyEdit extends Component {
                                     value = {this.state.company.name} 
                                     onChange={this.handleChange}
                                 />
+                                {errors.name.length > 0 &&  <span className='text-danger'>{errors.name}</span>}
                             </div>
                         </div>        
                         <div className="form-group row">
@@ -112,6 +172,7 @@ class CompanyEdit extends Component {
                                     required  
                                     onChange={this.handleChange}
                                 />
+                                {errors.email.length > 0 &&  <span className='text-danger'>{errors.email}</span>}
                             </div>
                         </div>
                         <div className="form-group row">
@@ -124,6 +185,7 @@ class CompanyEdit extends Component {
                                     required
                                     onChange={this.handleChange} 
                                 />
+                                {errors.website.length > 0 &&  <span className='text-danger'>{errors.website}</span>}
                             </div>
                         </div>
                         <div className="form-group row">
@@ -136,9 +198,10 @@ class CompanyEdit extends Component {
                                     onChange={this.handleFileChange}
                                 />
                                     <img style={{'width' : '50px', 'height': 'auto'}}  
-                                        src={ this.state.imgUrl + this.state.company.logo} 
+                                        src={ this.state.company.full_logo} 
                                         alt={this.state.company.logo}
                                     />
+                                    {errors.logo.length > 0 &&  <span className='text-danger'>{errors.logo}</span>}
                             </div>
                         </div>
                         <div className="form-group row mb-4">

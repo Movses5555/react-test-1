@@ -1,29 +1,38 @@
 import axios from 'axios';
 
 
+axios.interceptors.request.use((config) => {
+    const token = localStorage.getItem('token');
+    if (token != null) {
+        config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+});
+
+axios.interceptors.response.use((response) => {
+    return response;
+}, (error) => {
+    if (error.response.status === 401) {
+        localStorage.removeItem('token');
+        window.location = '/login';
+    }
+    return Promise.reject(error);
+});
+
 class Api {
     constructor() {
         this.Auth = axios.create();
-        this.Auth.interceptors.response.use(
-            response => response,
-            error => {
-                if (error.response.status === 401) {
-                    localStorage.removeItem("token");
-                    window.location.href = "/login";
-                }
-                throw error;
-            }
-        );
     }
 
-    baseUrl = 'http://laravel.loc';
+
+    baseUrl = process.env.REACT_APP_BASE_URL;
     companiesURL = `${this.baseUrl}/api/companies`;
     employeesURL = `${this.baseUrl}/api/employees`;
-    imgURL = "http://laravel.loc/storage/";
 
     getToken(){
         return localStorage.getItem('token');
     }
+    
     signIn(data) {
         return axios.post(`${this.baseUrl}/api/auth/login`, data, {
             headers: {

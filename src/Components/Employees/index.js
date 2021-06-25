@@ -1,38 +1,44 @@
 import React, { Component, Fragment } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from "react-redux";
 import NavBar from '../NavBar';
+import Paginate from '../Pageination'; 
 import Apis from '../../Services/ApiService/Api';
+import { getAllEmployees, deleteEmployee} from '../../store/Actions/employees';
+import SuccessMessage from '../successMsg';
+
 
 class EmployeeIndex extends Component {
     Api = new Apis();
     constructor(){
-        super();
+        super()
         this.state = {
-            employees: [],
-            errorMessage: '',
-        };
+            success : false
+        }
         this.handleDelete = this.handleDelete.bind(this)
     }
-    
     componentDidMount() 
     {   
-        this.Api.getAllEmployees().then(res => {
-            this.setState({employees : res.data.employees.data});
-        })      
-    }
-    handleDelete(id)
-    {   
-        const data = this.state.employees;
-        this.Api.destroyEmployee(id)
-            .then(res => {
-                const newData = data.filter(item => id !== item.id);
-                this.setState({employees : newData})
-            }).catch(err => { 
-                this.setState({errorMessage: err.message});
+        if ( this.props.location.state && this.props.location.state.success) {
+            this.setState({
+                success : this.props.location.state.success
             })
+            setTimeout(()=>{
+                this.setState({
+                    success : null
+                });
+                this.props.location.state.success = null;
+            }, 2000)
+        }
+        this.props.getAllEmployees();
     }
-
+    handleDelete(id) {
+        this.props.getAllEmployees(1);
+        this.props.deleteEmployee(id);
+    }
     render() {
+        const { employees } = this.props.employees;
+        const { ...allData} = this.props.allData;
         return (
             <Fragment>
                 <NavBar></NavBar>
@@ -41,9 +47,10 @@ class EmployeeIndex extends Component {
                         Add
                     </Link> 
                 </div>
-                <div>
-                    <p>{this.state.errorMessage}</p>
-                </div>
+                <SuccessMessage
+                    message="Add Emplloyees"
+                    success={this.state.success}
+                />
                 <div>
                     <table className="col-12 table " >
                         <thead>
@@ -58,12 +65,12 @@ class EmployeeIndex extends Component {
                         </thead>
                         <tbody> 
                             { 
-                                this.state.employees.map(employee => {
+                                employees.map(employee => {
                                     return (
                                         <tr className="row text-center m-0" key={employee.id}>
                                             <td className="col-2 pt-2">{employee.firstname} </td>
                                             <td className="col-2 pt-2">{employee.lastname}</td>
-                                            <td className="col-2 pt-2">{employee.company_id}</td>
+                                            <td className="col-2 pt-2">{employee.company.name}</td>
                                             <td className="col-2 pt-2">{employee.email}</td>
                                             <td className="col-2 pt-2">{employee.phone}</td>
                                             <td className="col-2">
@@ -95,10 +102,33 @@ class EmployeeIndex extends Component {
                             }
                         </tbody>
                     </table>
-                </div>     
+                </div> 
+                <div className="d-flex justify-content-center">
+                    <nav aria-label="Page navigation example">
+                        <ul className="pagination">
+                            <Paginate
+                                total={allData.last_page}
+                                currentPage={allData.current_page}
+                                click={page => this.props.getAllEmployees(page)}
+                            />
+                        </ul>
+                    </nav>
+                </div>    
             </Fragment>
         );
     }
 }
+const mapStateToProps = state => {
+    return {
+        employees: state.employees,
+        allData : state.employees.allData
+    };
+};
+const mapDispatchToProps = dispatch => {
+    return {
+        getAllEmployees: page => {dispatch(getAllEmployees(page))},
+        deleteEmployee: id => {dispatch(deleteEmployee(id))}
+    };
+};
 
-export default EmployeeIndex;
+export default connect(mapStateToProps,mapDispatchToProps)(EmployeeIndex);
